@@ -123,12 +123,12 @@ export default function Search() {
               hasMore={hasNextPage && !isLoading}
               loader={
                 <p style={{ textAlign: 'center', marginTop: '5px' }}>
-                  <h4>Loading more archives...</h4>
+                  <h4>Loading more TikToks...</h4>
                 </p>
               }
               endMessage={
                 <p style={{ textAlign: 'center', marginTop: '5px' }}>
-                  <b>No more archives...</b>
+                  <b>No more saved TikToks...</b>
                 </p>
               }
             >
@@ -194,7 +194,7 @@ export default function Search() {
         )}
         {archives.length === 0 && url !== '' && searchClicked && isLoading && (
           <VStack mt="20px">
-            <Text>Searching archives...</Text>
+            <Text>Searching saved TikToks...</Text>
             <Spinner
               thickness="4px"
               speed="0.65s"
@@ -208,7 +208,7 @@ export default function Search() {
           <Center mt={20}>
             <Alert status="info">
               <AlertIcon />
-              No archives found
+              No saved TikToks found
             </Alert>
           </Center>
         )}
