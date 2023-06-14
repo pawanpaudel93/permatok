@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './LoginButton.css'
 import Logo from '../Logo'
 import { type LogInReturnProps } from 'othent'
 import { getOthent } from '@/lib/utils'
+import { useStore } from '@/lib/store'
+import { Spinner } from '@chakra-ui/react'
 
 export interface LoginButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -12,12 +14,11 @@ export interface LoginButtonProps
 }
 
 const LoginButton = (props: LoginButtonProps) => {
+  const { isLoading, setIsLoading } = useStore()
   const { children, onLogin, apiid } = props
 
-  const [clicked, setClicked] = useState(false)
-
   const login = async () => {
-    setClicked(true)
+    setIsLoading(true)
     try {
       const othent = await getOthent(apiid)
       const loginResponse = await othent.logIn()
@@ -26,18 +27,29 @@ const LoginButton = (props: LoginButtonProps) => {
       console.log(`othent.login() failed:`)
       console.log(e)
     } finally {
-      setClicked(false)
+      setIsLoading(false)
     }
   }
 
   return (
     <button
       className="othent-button-login"
-      disabled={clicked}
+      disabled={isLoading}
       onClick={() => void login()}
       {...props}
     >
-      <Logo />
+      {isLoading ? (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="md"
+          mr={2.5}
+        />
+      ) : (
+        <Logo />
+      )}
       {children ? (
         children
       ) : (

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './Modal.css'
+import { useStore } from '@/lib/store'
 
 const LOCATIONS = [
   'top',
@@ -38,6 +39,7 @@ const Modal = (props: ModalProps) => {
 
   const [showModal, setShowModal] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
+  const { isLoading } = useStore()
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,7 +62,16 @@ const Modal = (props: ModalProps) => {
       onClick={() => setShowModal(!showModal)}
       {...props}
     >
-      {parent}
+      <div className="avatar-wrapper">
+        {isLoading && (
+          <div className="overlay">
+            <div className="avatar-loading-border">
+              <div className="loading-border" />
+            </div>
+          </div>
+        )}
+        {parent}
+      </div>
       {showModal && (
         <div
           className={`othent-modal-children othent-modal-children-${LOCATIONS[location]}`}

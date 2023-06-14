@@ -9,6 +9,11 @@ interface AppPerisistState {
   setUserData: (userData: null | LogInReturnProps) => void
 }
 
+interface AppState {
+  isLoading: boolean
+  setIsLoading: (isLoading: boolean) => void
+}
+
 export const usePersistStore = create(
   persist<AppPerisistState>(
     (set, get) => ({
@@ -23,3 +28,8 @@ export const usePersistStore = create(
     }
   )
 )
+
+export const useStore = create<AppState>((set, get) => ({
+  isLoading: false,
+  setIsLoading: (isLoading: boolean) => set({ isLoading })
+}))

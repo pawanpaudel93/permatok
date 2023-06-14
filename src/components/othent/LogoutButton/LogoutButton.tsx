@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import './LogoutButton.css'
 import { type LogOutReturnProps } from 'othent'
 import { getOthent } from '@/lib/utils'
+import { useStore } from '@/lib/store'
 
 export interface LogoutButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -13,10 +14,10 @@ export interface LogoutButtonProps
 const LogoutButton = (props: LogoutButtonProps) => {
   const { children = 'Log Out', onLogout, apiid } = props
 
-  const [clicked, setClicked] = useState(false)
+  const { isLoading, setIsLoading } = useStore()
 
   const logout = async () => {
-    setClicked(true)
+    setIsLoading(true)
     try {
       const othent = await getOthent(apiid)
       const logoutResponse = await othent.logOut()
@@ -25,14 +26,14 @@ const LogoutButton = (props: LogoutButtonProps) => {
       console.log(`othent.logout() failed:`)
       console.log(e)
     } finally {
-      setClicked(false)
+      setIsLoading(false)
     }
   }
 
   return (
     <button
       className="othent-button-logout"
-      disabled={clicked}
+      disabled={isLoading}
       onClick={() => void logout()}
       {...props}
     >
