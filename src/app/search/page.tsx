@@ -14,12 +14,10 @@ import {
   Center,
   VStack,
   Link,
-  Image,
   Alert,
   AlertIcon,
   Spinner,
-  Text,
-  Stack
+  Text
 } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { SearchIcon } from '@chakra-ui/icons'
@@ -28,7 +26,8 @@ import {
   getErrorMessage,
   formatDate,
   ArchiveType,
-  searchArchives
+  searchArchives,
+  convertDuration
 } from '@/lib/utils'
 
 export default function Search() {
@@ -142,36 +141,49 @@ export default function Search() {
                         whiteSpace="break-spaces"
                         textOverflow="ellipsis"
                       >
-                        <Stack
-                          direction={['column', 'row']}
-                          justifyContent="space-between"
-                        >
-                          <VStack width="80%">
-                            <Link
-                              href={archive.webpage}
-                              color="blue"
-                              isExternal
-                            >
-                              {archive.title || archive.webpage}
-                            </Link>
-                            <Link href={archive.url} isExternal>
-                              {archive.url}
-                            </Link>
-                          </VStack>
-                          <VStack>
-                            <Link href={archive.screenshot} isExternal>
-                              <Image
-                                src={archive.screenshot}
-                                style={{
-                                  cursor: 'pointer'
-                                }}
-                                boxSize="100px"
-                                alt={archive.title}
-                              />
-                            </Link>
-                            <small>{formatDate(archive.timestamp)}</small>
-                          </VStack>
-                        </Stack>
+                        <VStack>
+                          <Link
+                            href={archive.archivedUrl}
+                            color="blue"
+                            isExternal
+                          >
+                            {archive.archivedUrl}
+                          </Link>
+                          <Link
+                            href={archive.video?.url}
+                            color="blue"
+                            isExternal
+                          >
+                            {archive.video?.url}
+                          </Link>
+                          <Text>{archive.video?.description}</Text>
+                          <HStack>
+                            <Box>
+                              <b>Username:</b>&nbsp;
+                              <Link
+                                href={`https://tiktok.com/@${archive.video?.username}`}
+                                color="blue"
+                                isExternal
+                              >
+                                @{archive.video?.username}
+                              </Link>
+                            </Box>
+                            <Text>
+                              <b>Duration:</b>&nbsp;
+                              {convertDuration(
+                                archive.video?.duration as number
+                              )}
+                            </Text>
+                            <Text>
+                              <b>Created:</b>&nbsp;
+                              {formatDate(archive.video?.created as number)}
+                            </Text>
+                            <Text>
+                              <b>Saved:</b>&nbsp;
+                              {formatDate(archive.timestamp)}
+                            </Text>
+                          </HStack>
+                        </VStack>
                       </Td>
                     </Tr>
                   ))}

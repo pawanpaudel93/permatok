@@ -35,17 +35,19 @@ import {
 } from '@/lib/utils'
 import { usePersistStore } from '@/lib/store'
 import { CloseIcon } from '@chakra-ui/icons'
+import { Video, extractVideoId } from '@/lib/tiktok'
 
 interface MyFormValues {
   url: string
 }
 
-const Archive = () => {
+const Save = () => {
   const defaultArchive = {
     id: '',
     url: '',
     archivedUrl: '',
-    timestamp: 0
+    timestamp: 0,
+    video: undefined
   }
   const { userData } = usePersistStore()
   const toast = useToast()
@@ -55,7 +57,9 @@ const Archive = () => {
   const [archive, setArchive] = useState<ArchiveType>(defaultArchive)
 
   function validateURL(value: string) {
-    return isURL(value) ? undefined : 'Invalid URL'
+    return isURL(value) && extractVideoId(value)
+      ? undefined
+      : 'Invalid TikTok URL'
   }
 
   async function archiveUrl(url: string) {
@@ -72,7 +76,7 @@ const Archive = () => {
         body: JSON.stringify({ url })
       })
       const responseJSON = await response.json()
-      const videoData = responseJSON.data
+      const videoData = responseJSON.data as Video
 
       const timestamp = Math.floor(Date.now() / 1000)
 
@@ -87,6 +91,7 @@ const Archive = () => {
       setArchive({
         id: transactionId,
         timestamp,
+        video: videoData,
         url,
         archivedUrl: `https://arweave.net/${transactionId}`
       })
@@ -154,8 +159,8 @@ const Archive = () => {
                     <FormControl
                       isInvalid={!!form.errors.url && !!form.touched.url}
                     >
-                      <FormLabel>Archive URL content</FormLabel>
-                      <Input {...field} placeholder="URL to archive" />
+                      <FormLabel>Save TikTok video</FormLabel>
+                      <Input {...field} placeholder="TikTok video URL" />
                       <FormErrorMessage>{form.errors.url}</FormErrorMessage>
                     </FormControl>
                   )}
@@ -172,7 +177,7 @@ const Archive = () => {
                       type="submit"
                       isDisabled={!isAuthenticated}
                     >
-                      Archive
+                      Save
                     </Button>
                   ) : (
                     <div
@@ -197,7 +202,7 @@ const Archive = () => {
           <VStack mt="30px">
             <HStack>
               <Text color="green" fontWeight="bold">
-                Archived Result
+                Saved Result
               </Text>
               <IconButton
                 colorScheme="red"
@@ -219,7 +224,23 @@ const Archive = () => {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td>Archived Video</Td>
+                    <Td>Username</Td>
+                    <Td>{archive.video?.username}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Description</Td>
+                    <Td>{archive.video?.description}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Duration</Td>
+                    <Td>{archive.video?.duration}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Created At</Td>
+                    <Td>{formatDate(archive.video?.created as number)}</Td>
+                  </Tr>
+                  <Tr>
+                    <Td>Saved Url</Td>
                     <Td>
                       <Link href={archive.archivedUrl} color="blue" isExternal>
                         {archive.archivedUrl}
@@ -227,7 +248,7 @@ const Archive = () => {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td>Timestamp</Td>
+                    <Td>Saved Timestamp</Td>
                     <Td>{formatDate(archive.timestamp)}</Td>
                   </Tr>
                 </Tbody>
@@ -240,4 +261,4 @@ const Archive = () => {
   )
 }
 
-export default Archive
+export default Save

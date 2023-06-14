@@ -1,14 +1,16 @@
 import { Othent, useOthentReturnProps } from 'othent'
 import { createAuth0Client } from '@auth0/auth0-spa-js'
 import { sha256 } from 'crypto-hash'
-import { APP_NAME, APP_VERSION, MANIFEST_CONTENT_TYPE } from './constants'
+import { APP_NAME, APP_VERSION } from './constants'
 import axios from 'axios'
+import { Video } from './tiktok'
 
 export interface ArchiveType {
   id: string
   url: string
   archivedUrl: string
   timestamp: number
+  video?: Video
 }
 
 interface Tag {
@@ -97,7 +99,6 @@ const query = async ({
                   ${cursor ? `after: "${cursor}",` : ''}
                   tags: [
                       { name: "App-Name", values: ["${APP_NAME}"] }
-                      { name: "Content-Type", values: ["${MANIFEST_CONTENT_TYPE}"] }
                       { name: "App-Version", values: ["${APP_VERSION}"]}
                       ${
                         walletAddress
@@ -106,7 +107,7 @@ const query = async ({
                       }
                       ${
                         url
-                          ? `{name: "Url", values: ["${url}", "${url}/"]}`
+                          ? `{name: "tiktok:url", values: ["${url}", "${url}/"]}`
                           : ''
                       }
                   ]
@@ -164,11 +165,16 @@ export const getArchives = async (
           const { id, tags } = transaction.node
           return {
             id,
-            url: tags[5]?.value ?? '',
-            title: tags[3]?.value ?? '',
-            webpage: `https://arweave.net/${id}`,
-            screenshot: `https://arweave.net/${id}/screenshot`,
-            timestamp: parseInt(tags[6]?.value ?? '0')
+            url: tags[6]?.value ?? '',
+            archivedUrl: `https://arweave.net/${id}`,
+            timestamp: parseInt(tags[4]?.value ?? '0'),
+            video: {
+              url: tags[6]?.value ?? '',
+              username: tags[7]?.value ?? '',
+              description: tags[8]?.value ?? '',
+              duration: parseInt(tags[9]?.value ?? '0'),
+              created: parseInt(tags[10]?.value ?? '0')
+            }
           }
         }
       )
@@ -197,11 +203,16 @@ export const searchArchives = async (
           const { id, tags } = transaction.node
           return {
             id,
-            url: tags[5]?.value ?? '',
-            title: tags[3]?.value ?? '',
-            webpage: `https://arweave.net/${id}`,
-            screenshot: `https://arweave.net/${id}/screenshot`,
-            timestamp: parseInt(tags[6]?.value ?? '0')
+            url: tags[6]?.value ?? '',
+            archivedUrl: `https://arweave.net/${id}`,
+            timestamp: parseInt(tags[4]?.value ?? '0'),
+            video: {
+              url: tags[6]?.value ?? '',
+              username: tags[7]?.value ?? '',
+              description: tags[8]?.value ?? '',
+              duration: parseInt(tags[9]?.value ?? '0'),
+              created: parseInt(tags[10]?.value ?? '0')
+            }
           }
         }
       )
@@ -252,4 +263,14 @@ export function formatDate(timestamp: number) {
   const minutes = date.getMinutes()
 
   return `${day} ${getMonthName(month)} ${year} ${hours}:${minutes}`
+}
+
+export function convertDuration(duration: number) {
+  const seconds = Math.floor(duration / 1000)
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
+
+  return `${
+    minutes > 0 ? minutes + ' minutes ' : ''
+  }${remainingSeconds} seconds`
 }

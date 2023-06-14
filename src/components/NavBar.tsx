@@ -33,14 +33,14 @@ interface NavLinkProps extends LinkProps {
 const NavItems: Array<NavItem> = [
   {
     key: 0,
-    label: 'Archive',
-    href: '/archive',
+    label: 'Save TikTok',
+    href: '/save',
     isAuthentionRequired: false
   },
   {
     key: 1,
-    label: 'My Archives',
-    href: '/my-archives',
+    label: 'My TikToks',
+    href: '/my-tiktoks',
     isAuthentionRequired: true
   },
   {
@@ -130,7 +130,7 @@ const NavBar = function () {
                 <Box cursor="pointer" p={2}>
                   <HStack>
                     <Logo />
-                    <Heading size="md">dARchive</Heading>
+                    <Heading size="md">PermaTok</Heading>
                   </HStack>
                 </Box>
               </NextLink>

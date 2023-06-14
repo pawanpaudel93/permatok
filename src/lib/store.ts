@@ -19,7 +19,7 @@ export const usePersistStore = create(
       setUserData: (userData: null | LogInReturnProps) => set({ userData })
     }),
     {
-      name: 'darchive.store'
+      name: 'permatok.store'
     }
   )
 )

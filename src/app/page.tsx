@@ -9,7 +9,6 @@ import {
   Button,
   Image,
   Icon,
-  createIcon,
   IconProps,
   useColorModeValue
 } from '@chakra-ui/react'
@@ -46,7 +45,7 @@ export default function Home() {
                 zIndex: -1
               }}
             >
-              Archive once,
+              Save TikTok,
             </Text>
             <br />
             <Text as={'span'} color={'#0E76FD'}>
@@ -54,9 +53,8 @@ export default function Home() {
             </Text>
           </Heading>
           <Text color={'gray.500'}>
-            <b>dARchive</b> is a decentralized archiving app that lets you
-            snapshot any webpage anytime to create a digital archive and save it
-            to <b>ARweave</b> so that you can access it forever.
+            <b>PermaTok</b> lets you save the <b>TikTok</b> video to{' '}
+            <b>ARweave</b> so that you can access it forever.
           </Text>
           <Stack
             spacing={{ base: 4, sm: 6 }}
@@ -70,9 +68,9 @@ export default function Home() {
               colorScheme={'blue'}
               bg={'#0E76FD'}
               _hover={{ bg: 'blue.500' }}
-              onClick={() => router.push('/archive')}
+              onClick={() => router.push('/save')}
             >
-              Archive now
+              Save now
             </Button>
           </Stack>
         </Stack>

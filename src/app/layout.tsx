@@ -7,8 +7,8 @@ import NextTopLoader from 'nextjs-toploader'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Archive Forever',
-  description: "Archive a url's html and screenshot to Arweave"
+  title: 'PermaTok: Save Tiktok to Arweave',
+  description: 'Save a Tiktok video to Arweave'
 }
 
 export default function RootLayout({

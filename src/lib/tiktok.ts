@@ -3,7 +3,6 @@ const headers = {
 }
 
 export type Video = {
-  id: string
   url: string
   username: string
   description: string
@@ -35,7 +34,6 @@ export const getTiktokVideoInfo = async (url: string) => {
   const created = tiktok.create_time
 
   return {
-    id: videoId,
     url: videoUrl,
     description,
     username,
@@ -44,7 +42,7 @@ export const getTiktokVideoInfo = async (url: string) => {
   } as Video
 }
 
-function extractVideoId(url: string) {
+export function extractVideoId(url: string) {
   const regex = /\/video\/(\d+)/
   const match = url.match(regex)
   return match?.[1] || null
