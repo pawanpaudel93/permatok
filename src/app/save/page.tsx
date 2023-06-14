@@ -30,6 +30,7 @@ import { prepareFile, uploadToBundlr } from '@/lib/archive'
 import {
   ArchiveType,
   formatDate,
+  formatDuration,
   getAccessToken,
   getErrorMessage
 } from '@/lib/utils'
@@ -233,7 +234,7 @@ const Save = () => {
                   </Tr>
                   <Tr>
                     <Td>Duration</Td>
-                    <Td>{archive.video?.duration}</Td>
+                    <Td>{formatDuration(archive.video?.duration as number)}</Td>
                   </Tr>
                   <Tr>
                     <Td>Created At</Td>

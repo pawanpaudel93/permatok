@@ -27,7 +27,7 @@ import {
   formatDate,
   ArchiveType,
   searchArchives,
-  convertDuration
+  formatDuration
 } from '@/lib/utils'
 
 export default function Search() {
@@ -170,7 +170,7 @@ export default function Search() {
                             </Box>
                             <Text>
                               <b>Duration:</b>&nbsp;
-                              {convertDuration(
+                              {formatDuration(
                                 archive.video?.duration as number
                               )}
                             </Text>

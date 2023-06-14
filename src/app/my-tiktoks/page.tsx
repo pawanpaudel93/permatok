@@ -23,7 +23,7 @@ import {
   getArchives,
   ArchiveType,
   getErrorMessage,
-  convertDuration,
+  formatDuration,
   formatDate
 } from '@/lib/utils'
 
@@ -118,7 +118,7 @@ export default function MyArchives() {
                           </Box>
                           <Text>
                             <b>Duration:</b>&nbsp;
-                            {convertDuration(archive.video?.duration as number)}
+                            {formatDuration(archive.video?.duration as number)}
                           </Text>
                           <Text>
                             <b>Created:</b>&nbsp;

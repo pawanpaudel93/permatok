@@ -259,13 +259,13 @@ export function formatDate(timestamp: number) {
   const day = date.getDate()
   const month = date.getMonth() + 1
   const year = date.getFullYear()
-  const hours = date.getHours()
-  const minutes = date.getMinutes()
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
 
   return `${day} ${getMonthName(month)} ${year} ${hours}:${minutes}`
 }
 
-export function convertDuration(duration: number) {
+export function formatDuration(duration: number) {
   const seconds = Math.floor(duration / 1000)
   const minutes = Math.floor(seconds / 60)
   const remainingSeconds = seconds % 60
