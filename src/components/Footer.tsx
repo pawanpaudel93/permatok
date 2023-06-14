@@ -73,7 +73,7 @@ export function Footer() {
         align={{ base: 'center', md: 'center' }}
       >
         <Logo />
-        <Text>©2023 Decentralized ARchive. All rights reserved</Text>
+        <Text>©2023 PermaTok. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
           <SocialButton label={'Twitter'} href={'#'}>
             <FaTwitter />

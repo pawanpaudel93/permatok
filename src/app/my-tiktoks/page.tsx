@@ -59,8 +59,8 @@ export default function MyArchives() {
   }
 
   return (
-    <Center mt="100px">
-      {archives.length > 0 ? (
+    <Center>
+      {archives.length > 0 && (
         <TableContainer
           width={{
             base: '100%',
@@ -137,20 +137,23 @@ export default function MyArchives() {
             </Table>
           </InfiniteScroll>
         </TableContainer>
-      ) : (
-        <VStack>
-          <Text>Loading your saved TikToks...</Text>
-          <Spinner
-            thickness="4px"
-            speed="0.65s"
-            emptyColor="gray.200"
-            color="blue.500"
-            size="xl"
-          />
-        </VStack>
       )}
-      {archives.length === 0 && !isLoading && (
-        <Center mt={20}>
+      {archives.length === 0 && isLoading && hasNextPage && (
+        <Center>
+          <VStack>
+            <Text>Loading your saved TikToks...</Text>
+            <Spinner
+              thickness="4px"
+              speed="0.65s"
+              emptyColor="gray.200"
+              color="blue.500"
+              size="xl"
+            />
+          </VStack>
+        </Center>
+      )}
+      {archives.length === 0 && !isLoading && !hasNextPage && (
+        <Center mt={4}>
           <Alert status="info">
             <AlertIcon />
             No saved TikToks found

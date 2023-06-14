@@ -36,6 +36,7 @@ export default function Search() {
   const [hasNextPage, setHasNextPage] = useState(true)
   const [url, setUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+
   const [searchClicked, setSearchClicked] = useState(false)
 
   async function fetchData() {
@@ -82,7 +83,7 @@ export default function Search() {
             <HStack px={2}>
               <FormControl>
                 <Input
-                  placeholder="Search URL"
+                  placeholder="Search TikTok URL"
                   value={url}
                   onChange={(e) => {
                     setSearchClicked(false)
@@ -193,7 +194,7 @@ export default function Search() {
           </TableContainer>
         )}
         {archives.length === 0 && url !== '' && searchClicked && isLoading && (
-          <VStack mt="20px">
+          <VStack mt={12}>
             <Text>Searching saved TikToks...</Text>
             <Spinner
               thickness="4px"
@@ -205,7 +206,7 @@ export default function Search() {
           </VStack>
         )}
         {archives.length === 0 && url !== '' && searchClicked && !isLoading && (
-          <Center mt={20}>
+          <Center mt={16}>
             <Alert status="info">
               <AlertIcon />
               No saved TikToks found

@@ -87,7 +87,11 @@ const Save = () => {
         timestamp,
         address
       )
-      const transactionId = await uploadToBundlr(data, tags, accessToken)
+      const transactionId = await uploadToBundlr(
+        data,
+        tags,
+        accessToken.id_token
+      )
 
       setArchive({
         id: transactionId,
@@ -226,7 +230,15 @@ const Save = () => {
                   </Tr>
                   <Tr>
                     <Td>Username</Td>
-                    <Td>{archive.video?.username}</Td>
+                    <Td>
+                      <Link
+                        href={`https://tiktok.com/@${archive.video?.username}`}
+                        color="blue"
+                        isExternal
+                      >
+                        @{archive.video?.username}
+                      </Link>
+                    </Td>
                   </Tr>
                   <Tr>
                     <Td>Description</Td>
@@ -249,7 +261,7 @@ const Save = () => {
                     </Td>
                   </Tr>
                   <Tr>
-                    <Td>Saved Timestamp</Td>
+                    <Td>Saved At</Td>
                     <Td>{formatDate(archive.timestamp)}</Td>
                   </Tr>
                 </Tbody>

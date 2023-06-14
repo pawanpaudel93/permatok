@@ -2,7 +2,6 @@ import {
   SendTransactionBundlrProps,
   SendTransactionBundlrReturnProps
 } from 'othent'
-import { type GetTokenSilentlyVerboseResponse } from '@auth0/auth0-spa-js'
 import { APP_NAME, APP_VERSION } from './constants'
 import { createHash } from 'crypto'
 import { Video } from './tiktok'
@@ -63,16 +62,16 @@ export async function prepareFile(
 export async function uploadToBundlr(
   data: Buffer | string,
   tags: any,
-  accessToken: GetTokenSilentlyVerboseResponse
+  idToken: string
 ): Promise<string> {
   const response = await sendTransactionBundlr({
     data: data as unknown as Buffer,
-    JWT: accessToken.id_token,
+    JWT: idToken,
     tags
   })
   if (response.success) {
     return response.transactionId
   } else {
-    return await uploadToBundlr(data, tags, accessToken)
+    return await uploadToBundlr(data, tags, idToken)
   }
 }

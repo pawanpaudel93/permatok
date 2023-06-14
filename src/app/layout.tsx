@@ -22,7 +22,13 @@ export default function RootLayout({
         <Providers>
           <NextTopLoader />
           <NavBar />
-          <div style={{ marginTop: '70px', minHeight: 'calc(100vh - 70px)' }}>
+          <div
+            style={{
+              marginTop: '100px',
+              minHeight: 'calc(100vh - 170px)',
+              overflowY: 'auto'
+            }}
+          >
             {children}
           </div>
           <Footer />
