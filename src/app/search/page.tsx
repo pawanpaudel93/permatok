@@ -108,7 +108,7 @@ export default function Search() {
           </form>
         </Box>
       </Center>
-      <Center mt="100px">
+      <Center mt="70px">
         {archives.length > 0 && (
           <TableContainer
             width={{
@@ -123,14 +123,20 @@ export default function Search() {
               next={fetchData}
               hasMore={hasNextPage && !isLoading}
               loader={
-                <p style={{ textAlign: 'center', marginTop: '5px' }}>
-                  <h4>Loading more TikToks...</h4>
-                </p>
+                <Center mt="5px">
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                  />
+                </Center>
               }
               endMessage={
-                <p style={{ textAlign: 'center', marginTop: '5px' }}>
-                  <b>No more saved TikToks...</b>
-                </p>
+                <Center mt="5px">
+                  <Text fontWeight="bold">No more saved TikToks...</Text>
+                </Center>
               }
             >
               <Table variant="striped">
@@ -142,7 +148,7 @@ export default function Search() {
                         whiteSpace="break-spaces"
                         textOverflow="ellipsis"
                       >
-                        <VStack>
+                        <VStack align="center" spacing={2}>
                           <Link
                             href={archive.archivedUrl}
                             color="blue"
@@ -158,9 +164,9 @@ export default function Search() {
                             {archive.video?.url}
                           </Link>
                           <Text>{archive.video?.description}</Text>
-                          <HStack>
+                          <HStack align="center" spacing={4}>
                             <Box>
-                              <b>Username:</b>&nbsp;
+                              <Text fontWeight="bold">Username:</Text>
                               <Link
                                 href={`https://tiktok.com/@${archive.video?.username}`}
                                 color="blue"
@@ -169,20 +175,24 @@ export default function Search() {
                                 @{archive.video?.username}
                               </Link>
                             </Box>
-                            <Text>
-                              <b>Duration:</b>&nbsp;
-                              {formatDuration(
-                                archive.video?.duration as number
-                              )}
-                            </Text>
-                            <Text>
-                              <b>Created:</b>&nbsp;
-                              {formatDate(archive.video?.created as number)}
-                            </Text>
-                            <Text>
-                              <b>Saved:</b>&nbsp;
-                              {formatDate(archive.timestamp)}
-                            </Text>
+                            <Box>
+                              <Text fontWeight="bold">Duration:</Text>
+                              <Text>
+                                {formatDuration(
+                                  archive.video?.duration as number
+                                )}
+                              </Text>
+                            </Box>
+                            <Box>
+                              <Text fontWeight="bold">Created:</Text>
+                              <Text>
+                                {formatDate(archive.video?.created as number)}
+                              </Text>
+                            </Box>
+                            <Box>
+                              <Text fontWeight="bold">Saved:</Text>
+                              <Text>{formatDate(archive.timestamp)}</Text>
+                            </Box>
                           </HStack>
                         </VStack>
                       </Td>
@@ -194,7 +204,7 @@ export default function Search() {
           </TableContainer>
         )}
         {archives.length === 0 && url !== '' && searchClicked && isLoading && (
-          <VStack mt={12}>
+          <VStack mt={4}>
             <Text>Searching saved TikToks...</Text>
             <Spinner
               thickness="4px"
@@ -206,7 +216,7 @@ export default function Search() {
           </VStack>
         )}
         {archives.length === 0 && url !== '' && searchClicked && !isLoading && (
-          <Center mt={16}>
+          <Center mt={4}>
             <Alert status="info">
               <AlertIcon />
               No saved TikToks found
