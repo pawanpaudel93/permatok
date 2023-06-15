@@ -63,18 +63,11 @@ export async function getAccessToken() {
   const authParams = {
     transaction_input: JSON.stringify({
       othentFunction: 'uploadData',
-      file_hash: file_hash
-    })
-  }
-  const isAuthenticated = await auth0.isAuthenticated()
-  if (!isAuthenticated) {
-    await auth0.loginWithPopup({
-      authorizationParams: authParams
+      file_hash
     })
   }
   const accessToken = await auth0.getTokenSilently({
     detailedResponse: true,
-    cacheMode: 'off',
     authorizationParams: authParams
   })
   return accessToken
