@@ -58,7 +58,7 @@ const getAuth0Client = () =>
 export async function getAccessToken() {
   const auth0 = await getAuth0Client()
 
-  const file_hash = await sha256(new Uint8Array())
+  const file_hash = await sha256(new Uint8Array([]))
 
   const authParams = {
     transaction_input: JSON.stringify({
@@ -66,7 +66,7 @@ export async function getAccessToken() {
       file_hash: file_hash
     })
   }
-  const isAuthenticated = auth0.isAuthenticated()
+  const isAuthenticated = await auth0.isAuthenticated()
   if (!isAuthenticated) {
     await auth0.loginWithPopup({
       authorizationParams: authParams
