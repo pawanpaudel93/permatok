@@ -4,7 +4,7 @@ import Logo from '../Logo'
 import { type LogInReturnProps } from 'othent'
 import { getOthent } from '@/lib/utils'
 import { useStore } from '@/lib/store'
-import { Spinner } from '@chakra-ui/react'
+import { Hide, Show, Spinner, Text} from '@chakra-ui/react'
 
 export interface LoginButtonProps
   extends React.HTMLAttributes<HTMLButtonElement> {
@@ -54,8 +54,13 @@ const LoginButton = (props: LoginButtonProps) => {
         children
       ) : (
         <>
-          Sign in&nbsp;with&nbsp;
-          <span className="othent-button-login-brandname">Google</span>
+          <Hide below='sm'>
+            Sign in with&nbsp;
+            <span className="othent-button-login-brandname">Google</span>
+          </Hide>
+          <Show below='sm'>
+            Sign in
+          </Show>
         </>
       )}
     </button>
