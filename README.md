@@ -55,7 +55,7 @@ yarn start
 
 1. **Save TikTok**: Users can sign in using their Gmail account, visit the `Save TikTok` page, and enter the TikTok URL. Then, the video is uploaded via Othent to Arweave to store it permanently.
 
-2. **My Archives**: Users can view their saved TikTok videos.
+2. **My TikToks**: Users can view their saved TikTok videos.
 
 3. **Search**: Users can search using a URL to retrieve the search results. They can view the saved TikTok videos.
 
