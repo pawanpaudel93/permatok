@@ -5,6 +5,7 @@ import {
 import { APP_NAME, APP_VERSION } from './constants'
 import { createHash } from 'crypto'
 import { Video } from './tiktok'
+import { sha256 } from 'crypto-hash'
 
 export async function sendTransactionBundlr(
   params: SendTransactionBundlrProps
@@ -27,12 +28,6 @@ export async function sendTransactionBundlr(
   return response.json()
 }
 
-async function toHash(data: Buffer): Promise<string> {
-  const hashBuffer = createHash('sha256').update(data).digest()
-  const hashHex = hashBuffer.toString('hex')
-  return hashHex
-}
-
 export async function prepareFile(
   data: Video,
   url: string,
@@ -41,7 +36,7 @@ export async function prepareFile(
 ) {
   const { url: downloadUrl, username, description, duration, created } = data
   const bufferData = Buffer.from(await (await fetch(downloadUrl)).arrayBuffer())
-  const hash = await toHash(bufferData)
+  const hash = await sha256(bufferData)
 
   const tags = [
     { name: 'App-Name', value: APP_NAME },
@@ -56,7 +51,7 @@ export async function prepareFile(
     { name: 'tiktok:duration', value: String(duration) },
     { name: 'tiktok:created', value: String(created) }
   ]
-  return { data: bufferData, tags }
+  return { data: bufferData, tags, hash }
 }
 
 export async function uploadToBundlr(

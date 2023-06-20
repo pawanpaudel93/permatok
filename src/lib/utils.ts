@@ -55,10 +55,8 @@ const getAuth0Client = () =>
     }
   })
 
-export async function getAccessToken() {
+export async function getAccessToken(file_hash: string) {
   const auth0 = await getAuth0Client()
-
-  const file_hash = await sha256(new Uint8Array([]))
 
   const authParams = {
     transaction_input: JSON.stringify({

@@ -75,7 +75,6 @@ const Save = () => {
       if (savedTiktok.archivedUrl) {
         setTiktok(savedTiktok)
       } else {
-        const accessToken = await getAccessToken()
         const address = userData?.contract_id as string
         const response = await fetch('/api/video-info', {
           method: 'POST',
@@ -89,12 +88,13 @@ const Save = () => {
 
         const timestamp = Math.floor(Date.now() / 1000)
 
-        const { data, tags } = await prepareFile(
+        const { data, tags, hash } = await prepareFile(
           videoData,
           url,
           timestamp,
           address
         )
+        const accessToken = await getAccessToken(hash)
         const transactionId = await uploadToBundlr(
           data,
           tags,
