@@ -12,7 +12,7 @@ export interface LogoutButtonProps
 }
 
 const LogoutButton = (props: LogoutButtonProps) => {
-  const { children = 'Log Out', onLogout, apiid } = props
+  const { children = 'Sign Out', onLogout, apiid } = props
 
   const { isLoading, setIsLoading } = useStore()
 
