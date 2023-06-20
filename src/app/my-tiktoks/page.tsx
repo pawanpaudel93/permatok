@@ -1,20 +1,16 @@
 'use client'
 
 import {
-  Td,
-  Table,
-  TableContainer,
-  Tbody,
-  Tr,
+  Box,
   Center,
+  SimpleGrid,
   VStack,
   Link,
   Alert,
   AlertIcon,
   Spinner,
   Text,
-  HStack,
-  Box
+  Stack
 } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { usePersistStore } from '@/lib/store'
@@ -61,20 +57,23 @@ export default function MyArchives() {
   return (
     <Center>
       {archives.length > 0 && (
-        <TableContainer
+        <Box
           width={{
             base: '100%',
             md: '80%',
             lg: '60%'
           }}
-          maxW="100%"
+          boxShadow="lg"
+          rounded="md"
+          p={4}
+          bg="white"
         >
           <InfiniteScroll
             dataLength={archives.length}
             next={fetchData}
             hasMore={hasNextPage && !isLoading}
             loader={
-              <Center mt="5px">
+              <Center mt={4}>
                 <Spinner
                   thickness="4px"
                   speed="0.65s"
@@ -85,73 +84,80 @@ export default function MyArchives() {
               </Center>
             }
             endMessage={
-              <Center mt="5px">
+              <Center mt={4}>
                 <Text fontWeight="bold">No more saved TikToks...</Text>
               </Center>
             }
           >
-            <Table variant="striped">
-              <Tbody>
-                {archives.map((archive: ArchiveType) => (
-                  <Tr key={archive.id}>
-                    <Td
-                      overflow="hidden"
-                      whiteSpace="break-spaces"
-                      textOverflow="ellipsis"
-                    >
-                      <VStack align="center" spacing={2}>
-                        <Link
-                          href={archive.archivedUrl}
-                          color="blue"
-                          isExternal
-                        >
-                          {archive.archivedUrl}
-                        </Link>
-                        <Link href={archive.video?.url} color="blue" isExternal>
-                          {archive.video?.url}
-                        </Link>
-                        <Text>{archive.video?.description}</Text>
-                        <HStack align="center" spacing={4}>
-                          <Box>
-                            <Text fontWeight="bold">Username:</Text>
-                            <Link
-                              href={`https://tiktok.com/@${archive.video?.username}`}
-                              color="blue"
-                              isExternal
-                            >
-                              @{archive.video?.username}
-                            </Link>
-                          </Box>
-                          <Box>
-                            <Text fontWeight="bold">Duration:</Text>
-                            <Text>
-                              {formatDuration(
-                                archive.video?.duration as number
-                              )}
-                            </Text>
-                          </Box>
-                          <Box>
-                            <Text fontWeight="bold">Created:</Text>
-                            <Text>
-                              {formatDate(archive.video?.created as number)}
-                            </Text>
-                          </Box>
-                          <Box>
-                            <Text fontWeight="bold">Saved:</Text>
-                            <Text>{formatDate(archive.timestamp)}</Text>
-                          </Box>
-                        </HStack>
-                      </VStack>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+            <SimpleGrid
+              columns={{
+                sm: 1
+              }}
+              spacing={4}
+            >
+              {archives.map((archive: ArchiveType) => (
+                <Box key={archive.id} p={4} bg="gray.100" rounded="md">
+                  <VStack align="center" spacing={2}>
+                    <Stack direction={['column', 'row']}>
+                      <Link
+                        href={archive.archivedUrl}
+                        color="blue"
+                        wordBreak="break-all"
+                        isExternal
+                      >
+                        Saved TikTok Link
+                      </Link>
+                      <Link
+                        href={archive.video?.url}
+                        color="blue"
+                        wordBreak="break-all"
+                        isExternal
+                      >
+                        Original TikTok Link
+                      </Link>
+                    </Stack>
+                    <Text align="center">{archive.video?.description}</Text>
+                    <Stack direction={['column', 'row']} spacing={4}>
+                      <Stack direction={['column', 'row']} spacing={4}>
+                        <VStack spacing={1}>
+                          <Text fontWeight="bold">Username:</Text>
+                          <Link
+                            href={`https://tiktok.com/@${archive.video?.username}`}
+                            color="blue"
+                            isExternal
+                          >
+                            @{archive.video?.username}
+                          </Link>
+                        </VStack>
+                        <VStack spacing={1}>
+                          <Text fontWeight="bold">Duration:</Text>
+                          <Text>
+                            {formatDuration(archive.video?.duration as number)}
+                          </Text>
+                        </VStack>
+                      </Stack>
+                      <Stack direction={['column', 'row']} spacing={4}>
+                        <VStack spacing={1}>
+                          <Text fontWeight="bold">Created:</Text>
+                          <Text>
+                            {formatDate(archive.video?.created as number)}
+                          </Text>
+                        </VStack>
+                        <VStack spacing={1}>
+                          <Text fontWeight="bold">Saved:</Text>
+                          <Text>{formatDate(archive.timestamp)}</Text>
+                        </VStack>
+                      </Stack>
+                    </Stack>
+                  </VStack>
+                </Box>
+              ))}
+            </SimpleGrid>
           </InfiniteScroll>
-        </TableContainer>
+        </Box>
       )}
       {archives.length === 0 && isLoading && hasNextPage && (
-        <Center>
+        <Center mt={4}>
           <VStack>
             <Text>Loading your saved TikToks...</Text>
             <Spinner

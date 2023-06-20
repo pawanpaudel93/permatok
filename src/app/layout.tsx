@@ -24,8 +24,8 @@ export default function RootLayout({
           <NavBar />
           <div
             style={{
-              marginTop: '100px',
-              minHeight: 'calc(100vh - 170px)',
+              marginTop: '80px',
+              minHeight: 'calc(100vh - 150px)',
               overflowY: 'auto'
             }}
           >
