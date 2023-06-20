@@ -5,7 +5,7 @@ import { APP_NAME, APP_VERSION } from './constants'
 import axios from 'axios'
 import { Video } from './tiktok'
 
-export interface ArchiveType {
+export interface TiktokType {
   id: string
   url: string
   archivedUrl: string
@@ -126,7 +126,7 @@ const query = async ({
     data: {
       data: {
         transactions: {
-          edges: archivedTransactions,
+          edges: tiktokTransactions,
           pageInfo: { hasNextPage }
         }
       }
@@ -134,26 +134,26 @@ const query = async ({
   } = await axios.post('https://arweave.net/graphql', query, {
     headers: { 'Content-Type': 'application/json' }
   })
-  cursor = archivedTransactions[archivedTransactions.length - 1]?.cursor
-  return { archivedTransactions, cursor, hasNextPage }
+  cursor = tiktokTransactions[tiktokTransactions.length - 1]?.cursor
+  return { tiktokTransactions, cursor, hasNextPage }
 }
 
-export const getArchives = async (
+export const getTiktoks = async (
   walletAddress: string,
   hasNextPage: boolean,
   cursor: string
 ): Promise<{
-  archives: ArchiveType[]
+  tiktoks: TiktokType[]
   hasNextPage: boolean
   cursor: string
 }> => {
-  const archives: ArchiveType[] = []
+  const tiktoks: TiktokType[] = []
   const result = await query({ first: 100, cursor, walletAddress })
   hasNextPage = result.hasNextPage
   cursor = result.cursor ?? ''
-  if (result.archivedTransactions.length > 0) {
-    archives.push(
-      ...result.archivedTransactions.map(
+  if (result.tiktokTransactions.length > 0) {
+    tiktoks.push(
+      ...result.tiktokTransactions.map(
         (transaction: { node: { tags: Tag[]; id: string } }) => {
           const { id, tags } = transaction.node
           return {
@@ -173,25 +173,25 @@ export const getArchives = async (
       )
     )
   }
-  return { archives, hasNextPage, cursor }
+  return { tiktoks, hasNextPage, cursor }
 }
 
-export const searchArchives = async (
+export const searchTiktoks = async (
   url: string,
   hasNextPage: boolean,
   cursor: string
 ): Promise<{
-  archives: ArchiveType[]
+  tiktoks: TiktokType[]
   hasNextPage: boolean
   cursor: string
 }> => {
-  const archives: ArchiveType[] = []
+  const tiktoks: TiktokType[] = []
   const result = await query({ first: 100, cursor, url })
   hasNextPage = result.hasNextPage
   cursor = result.cursor ?? ''
-  if (result.archivedTransactions.length > 0) {
-    archives.push(
-      ...result.archivedTransactions.map(
+  if (result.tiktokTransactions.length > 0) {
+    tiktoks.push(
+      ...result.tiktokTransactions.map(
         (transaction: { node: { tags: Tag[]; id: string } }) => {
           const { id, tags } = transaction.node
           return {
@@ -211,11 +211,11 @@ export const searchArchives = async (
       )
     )
   }
-  return { archives, hasNextPage, cursor }
+  return { tiktoks, hasNextPage, cursor }
 }
 
-export const getArchive = async (url: string): Promise<ArchiveType> => {
-  let archive: ArchiveType = {
+export const getTiktok = async (url: string): Promise<TiktokType> => {
+  let tiktok: TiktokType = {
     id: '',
     url: '',
     archivedUrl: '',
@@ -223,12 +223,12 @@ export const getArchive = async (url: string): Promise<ArchiveType> => {
   }
   try {
     const result = await query({ first: 1, url })
-    if (result.archivedTransactions.length > 0) {
-      const transaction = result.archivedTransactions[0] as {
+    if (result.tiktokTransactions.length > 0) {
+      const transaction = result.tiktokTransactions[0] as {
         node: { tags: Tag[]; id: string }
       }
       const { id, tags } = transaction.node
-      archive = {
+      tiktok = {
         id,
         url: tags[6]?.value ?? '',
         archivedUrl: `https://arweave.net/${id}`,
@@ -243,21 +243,21 @@ export const getArchive = async (url: string): Promise<ArchiveType> => {
       }
     }
   } catch (error) {}
-  return archive
+  return tiktok
 }
 
-export const getAllArchives = async (
+export const getAllTiktoks = async (
   walletAddress: string
-): Promise<ArchiveType[]> => {
-  const archives: ArchiveType[] = []
+): Promise<TiktokType[]> => {
+  const tiktoks: TiktokType[] = []
   let hasNextPage = true
   let cursor = ''
   while (hasNextPage) {
-    const result = await getArchives(walletAddress, hasNextPage, cursor)
+    const result = await getTiktoks(walletAddress, hasNextPage, cursor)
     hasNextPage = result.hasNextPage
     cursor = result.cursor
   }
-  return archives
+  return tiktoks
 }
 
 function getMonthName(month: number) {

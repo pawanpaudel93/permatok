@@ -28,11 +28,11 @@ import { ModalLocation, OthentLogin } from '@/components/othent'
 import { useState } from 'react'
 import { prepareFile, uploadToBundlr } from '@/lib/archive'
 import {
-  ArchiveType,
+  TiktokType,
   formatDate,
   formatDuration,
   getAccessToken,
-  getArchive,
+  getTiktok,
   getErrorMessage
 } from '@/lib/utils'
 import { usePersistStore } from '@/lib/store'
@@ -44,7 +44,7 @@ interface MyFormValues {
 }
 
 const Save = () => {
-  const defaultArchive = {
+  const defaultTiktok = {
     id: '',
     url: '',
     archivedUrl: '',
@@ -56,7 +56,7 @@ const Save = () => {
   const initialValues: MyFormValues = { url: '' }
   const [isLoading, setIsLoading] = useState(false)
   const { isAuthenticated } = usePersistStore()
-  const [archive, setArchive] = useState<ArchiveType>(defaultArchive)
+  const [tiktok, setTiktok] = useState<TiktokType>(defaultTiktok)
 
   function validateURL(value: string) {
     return isURL(value) && extractVideoId(value)
@@ -64,17 +64,16 @@ const Save = () => {
       : 'Invalid TikTok URL'
   }
 
-  async function archiveUrl(url: string) {
+  async function saveUrl(url: string) {
     try {
-      setArchive(defaultArchive)
-      const savedTiktok = await getArchive(url)
+      setTiktok(defaultTiktok)
+      const savedTiktok = await getTiktok(url)
       if (savedTiktok.archivedUrl) {
-        setArchive(savedTiktok)
+        setTiktok(savedTiktok)
       } else {
         const accessToken = await getAccessToken()
         const address = userData?.contract_id as string
-        const archiveUrl = process.env.NEXT_PUBLIC_API_URL ?? '/api/video-info'
-        const response = await fetch(archiveUrl, {
+        const response = await fetch('/api/video-info', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -98,7 +97,7 @@ const Save = () => {
           accessToken.id_token
         )
 
-        setArchive({
+        setTiktok({
           id: transactionId,
           timestamp,
           video: videoData,
@@ -128,7 +127,7 @@ const Save = () => {
     setIsLoading(true)
     const { url } = values
     try {
-      await archiveUrl(url)
+      await saveUrl(url)
     } catch (e) {
       console.log(getErrorMessage(e))
     } finally {
@@ -208,7 +207,7 @@ const Save = () => {
           </Formik>
         </Box>
       </Container>
-      {!isLoading && archive.id && (
+      {!isLoading && tiktok.id && (
         <Container maxW="5xl">
           <VStack mt="30px">
             <HStack>
@@ -220,7 +219,7 @@ const Save = () => {
                 aria-label="Clear Result"
                 size="sm"
                 icon={<CloseIcon />}
-                onClick={() => setArchive(defaultArchive)}
+                onClick={() => setTiktok(defaultTiktok)}
               />
             </HStack>
             <TableContainer width="100%">
@@ -229,8 +228,8 @@ const Save = () => {
                   <Tr>
                     <Td>Url</Td>
                     <Td>
-                      <Link href={archive.url} color="blue" isExternal>
-                        {archive.url}
+                      <Link href={tiktok.url} color="blue" isExternal>
+                        {tiktok.url}
                       </Link>
                     </Td>
                   </Tr>
@@ -238,37 +237,37 @@ const Save = () => {
                     <Td>Username</Td>
                     <Td>
                       <Link
-                        href={`https://tiktok.com/@${archive.video?.username}`}
+                        href={`https://tiktok.com/@${tiktok.video?.username}`}
                         color="blue"
                         isExternal
                       >
-                        @{archive.video?.username}
+                        @{tiktok.video?.username}
                       </Link>
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Description</Td>
-                    <Td>{archive.video?.description}</Td>
+                    <Td>{tiktok.video?.description}</Td>
                   </Tr>
                   <Tr>
                     <Td>Duration</Td>
-                    <Td>{formatDuration(archive.video?.duration as number)}</Td>
+                    <Td>{formatDuration(tiktok.video?.duration as number)}</Td>
                   </Tr>
                   <Tr>
                     <Td>Created At</Td>
-                    <Td>{formatDate(archive.video?.created as number)}</Td>
+                    <Td>{formatDate(tiktok.video?.created as number)}</Td>
                   </Tr>
                   <Tr>
                     <Td>Saved Url</Td>
                     <Td>
-                      <Link href={archive.archivedUrl} color="blue" isExternal>
-                        {archive.archivedUrl}
+                      <Link href={tiktok.archivedUrl} color="blue" isExternal>
+                        {tiktok.archivedUrl}
                       </Link>
                     </Td>
                   </Tr>
                   <Tr>
                     <Td>Saved At</Td>
-                    <Td>{formatDate(archive.timestamp)}</Td>
+                    <Td>{formatDate(tiktok.timestamp)}</Td>
                   </Tr>
                 </Tbody>
               </Table>

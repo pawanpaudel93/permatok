@@ -16,18 +16,18 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { usePersistStore } from '@/lib/store'
 import { useEffect, useState } from 'react'
 import {
-  getArchives,
-  ArchiveType,
+  getTiktoks,
+  TiktokType,
   getErrorMessage,
   formatDuration,
   formatDate
 } from '@/lib/utils'
 
-export default function MyArchives() {
+export default function MyTiktoks() {
   const { userData } = usePersistStore()
   const [isLoading, setIsLoading] = useState(true)
   const [cursor, setCursor] = useState('')
-  const [archives, setArchives] = useState<ArchiveType[]>([])
+  const [tiktoks, setTiktoks] = useState<TiktokType[]>([])
   const [hasNextPage, setHasNextPage] = useState(true)
 
   useEffect(() => {
@@ -40,14 +40,14 @@ export default function MyArchives() {
   async function fetchData() {
     setIsLoading(true)
     try {
-      const response = await getArchives(
+      const response = await getTiktoks(
         userData?.contract_id as string,
         hasNextPage,
         cursor
       )
       setHasNextPage(response.hasNextPage)
       setCursor(response.cursor)
-      setArchives((oldArchives) => [...oldArchives, ...response.archives])
+      setTiktoks((oldTiktoks) => [...oldTiktoks, ...response.tiktoks])
     } catch (e) {
       console.log(getErrorMessage(e))
     }
@@ -56,7 +56,7 @@ export default function MyArchives() {
 
   return (
     <Center>
-      {archives.length > 0 && (
+      {tiktoks.length > 0 && (
         <Box
           width={{
             base: '100%',
@@ -69,7 +69,7 @@ export default function MyArchives() {
           bg="white"
         >
           <InfiniteScroll
-            dataLength={archives.length}
+            dataLength={tiktoks.length}
             next={fetchData}
             hasMore={hasNextPage && !isLoading}
             loader={
@@ -95,12 +95,12 @@ export default function MyArchives() {
               }}
               spacing={4}
             >
-              {archives.map((archive: ArchiveType) => (
-                <Box key={archive.id} p={4} bg="gray.100" rounded="md">
+              {tiktoks.map((tiktok: TiktokType) => (
+                <Box key={tiktok.id} p={4} bg="gray.100" rounded="md">
                   <VStack align="center" spacing={2}>
                     <Stack direction={['column', 'row']}>
                       <Link
-                        href={archive.archivedUrl}
+                        href={tiktok.archivedUrl}
                         color="blue"
                         wordBreak="break-all"
                         isExternal
@@ -108,7 +108,7 @@ export default function MyArchives() {
                         Saved TikTok Link
                       </Link>
                       <Link
-                        href={archive.video?.url}
+                        href={tiktok.video?.url}
                         color="blue"
                         wordBreak="break-all"
                         isExternal
@@ -116,23 +116,23 @@ export default function MyArchives() {
                         Original TikTok Link
                       </Link>
                     </Stack>
-                    <Text align="center">{archive.video?.description}</Text>
+                    <Text align="center">{tiktok.video?.description}</Text>
                     <Stack direction={['column', 'row']} spacing={4}>
                       <Stack direction={['column', 'row']} spacing={4}>
                         <VStack spacing={1}>
                           <Text fontWeight="bold">Username:</Text>
                           <Link
-                            href={`https://tiktok.com/@${archive.video?.username}`}
+                            href={`https://tiktok.com/@${tiktok.video?.username}`}
                             color="blue"
                             isExternal
                           >
-                            @{archive.video?.username}
+                            @{tiktok.video?.username}
                           </Link>
                         </VStack>
                         <VStack spacing={1}>
                           <Text fontWeight="bold">Duration:</Text>
                           <Text>
-                            {formatDuration(archive.video?.duration as number)}
+                            {formatDuration(tiktok.video?.duration as number)}
                           </Text>
                         </VStack>
                       </Stack>
@@ -140,12 +140,12 @@ export default function MyArchives() {
                         <VStack spacing={1}>
                           <Text fontWeight="bold">Created:</Text>
                           <Text>
-                            {formatDate(archive.video?.created as number)}
+                            {formatDate(tiktok.video?.created as number)}
                           </Text>
                         </VStack>
                         <VStack spacing={1}>
                           <Text fontWeight="bold">Saved:</Text>
-                          <Text>{formatDate(archive.timestamp)}</Text>
+                          <Text>{formatDate(tiktok.timestamp)}</Text>
                         </VStack>
                       </Stack>
                     </Stack>
@@ -156,7 +156,7 @@ export default function MyArchives() {
           </InfiniteScroll>
         </Box>
       )}
-      {archives.length === 0 && isLoading && hasNextPage && (
+      {tiktoks.length === 0 && isLoading && hasNextPage && (
         <Center mt={4}>
           <VStack>
             <Text>Loading your saved TikToks...</Text>
@@ -170,7 +170,7 @@ export default function MyArchives() {
           </VStack>
         </Center>
       )}
-      {archives.length === 0 && !isLoading && !hasNextPage && (
+      {tiktoks.length === 0 && !isLoading && !hasNextPage && (
         <Center mt={4}>
           <Alert status="info">
             <AlertIcon />

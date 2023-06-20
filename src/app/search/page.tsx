@@ -22,14 +22,14 @@ import { FormEvent, useState } from 'react'
 import {
   getErrorMessage,
   formatDate,
-  ArchiveType,
-  searchArchives,
+  TiktokType,
+  searchTiktoks,
   formatDuration
 } from '@/lib/utils'
 
 export default function Search() {
   const [cursor, setCursor] = useState('')
-  const [archives, setArchives] = useState<ArchiveType[]>([])
+  const [tiktoks, setTiktoks] = useState<TiktokType[]>([])
   const [hasNextPage, setHasNextPage] = useState(true)
   const [url, setUrl] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -39,14 +39,14 @@ export default function Search() {
   async function fetchData() {
     setIsLoading(true)
     try {
-      const response = await searchArchives(
+      const response = await searchTiktoks(
         url.replace(/\/$/, ''),
         hasNextPage,
         cursor
       )
       setHasNextPage(response.hasNextPage)
       setCursor(response.cursor)
-      setArchives((oldArchives) => [...oldArchives, ...response.archives])
+      setTiktoks((oldTiktoks) => [...oldTiktoks, ...response.tiktoks])
     } catch (e) {
       console.log(getErrorMessage(e))
     }
@@ -86,7 +86,7 @@ export default function Search() {
                     setSearchClicked(false)
                     setHasNextPage(false)
                     setCursor('')
-                    setArchives([])
+                    setTiktoks([])
                     setUrl(e.target.value)
                   }}
                   required
@@ -106,7 +106,7 @@ export default function Search() {
         </Box>
       </Center>
       <Center mt="70px">
-        {archives.length > 0 && (
+        {tiktoks.length > 0 && (
           <Box
             width={{
               base: '100%',
@@ -119,7 +119,7 @@ export default function Search() {
             bg="white"
           >
             <InfiniteScroll
-              dataLength={archives.length}
+              dataLength={tiktoks.length}
               next={fetchData}
               hasMore={hasNextPage && !isLoading}
               loader={
@@ -145,12 +145,12 @@ export default function Search() {
                 }}
                 spacing={4}
               >
-                {archives.map((archive: ArchiveType) => (
-                  <Box key={archive.id} p={4} bg="gray.100" rounded="md">
+                {tiktoks.map((tiktok: TiktokType) => (
+                  <Box key={tiktok.id} p={4} bg="gray.100" rounded="md">
                     <VStack align="center" spacing={2}>
                       <Stack direction={['column', 'row']}>
                         <Link
-                          href={archive.archivedUrl}
+                          href={tiktok.archivedUrl}
                           color="blue"
                           wordBreak="break-all"
                           isExternal
@@ -158,7 +158,7 @@ export default function Search() {
                           Saved TikTok Link
                         </Link>
                         <Link
-                          href={archive.video?.url}
+                          href={tiktok.video?.url}
                           color="blue"
                           wordBreak="break-all"
                           isExternal
@@ -166,25 +166,23 @@ export default function Search() {
                           Original TikTok Link
                         </Link>
                       </Stack>
-                      <Text align="center">{archive.video?.description}</Text>
+                      <Text align="center">{tiktok.video?.description}</Text>
                       <Stack direction={['column', 'row']} spacing={4}>
                         <Stack direction={['column', 'row']} spacing={4}>
                           <VStack spacing={1}>
                             <Text fontWeight="bold">Username:</Text>
                             <Link
-                              href={`https://tiktok.com/@${archive.video?.username}`}
+                              href={`https://tiktok.com/@${tiktok.video?.username}`}
                               color="blue"
                               isExternal
                             >
-                              @{archive.video?.username}
+                              @{tiktok.video?.username}
                             </Link>
                           </VStack>
                           <VStack spacing={1}>
                             <Text fontWeight="bold">Duration:</Text>
                             <Text>
-                              {formatDuration(
-                                archive.video?.duration as number
-                              )}
+                              {formatDuration(tiktok.video?.duration as number)}
                             </Text>
                           </VStack>
                         </Stack>
@@ -192,12 +190,12 @@ export default function Search() {
                           <VStack spacing={1}>
                             <Text fontWeight="bold">Created:</Text>
                             <Text>
-                              {formatDate(archive.video?.created as number)}
+                              {formatDate(tiktok.video?.created as number)}
                             </Text>
                           </VStack>
                           <VStack spacing={1}>
                             <Text fontWeight="bold">Saved:</Text>
-                            <Text>{formatDate(archive.timestamp)}</Text>
+                            <Text>{formatDate(tiktok.timestamp)}</Text>
                           </VStack>
                         </Stack>
                       </Stack>
@@ -208,7 +206,7 @@ export default function Search() {
             </InfiniteScroll>
           </Box>
         )}
-        {archives.length === 0 && url !== '' && searchClicked && isLoading && (
+        {tiktoks.length === 0 && url !== '' && searchClicked && isLoading && (
           <VStack mt={4}>
             <Text>Searching saved TikToks...</Text>
             <Spinner
@@ -220,7 +218,7 @@ export default function Search() {
             />
           </VStack>
         )}
-        {archives.length === 0 && url !== '' && searchClicked && !isLoading && (
+        {tiktoks.length === 0 && url !== '' && searchClicked && !isLoading && (
           <Center mt={4}>
             <Alert status="info">
               <AlertIcon />
