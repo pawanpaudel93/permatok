@@ -25,7 +25,41 @@ export default function Home() {
         py={{ base: 20, md: 28 }}
         direction={{ base: 'column', md: 'row' }}
       >
-        <Stack flex={1} spacing={{ base: 5, md: 10 }}>
+        <Flex
+          flex={1}
+          justify={'center'}
+          align={'center'}
+          position={'relative'}
+          w={'full'}
+        >
+          <Blob
+            w={'100%'}
+            h={'100%'}
+            position={'absolute'}
+            top={'-20%'}
+            left={0}
+            zIndex={-1}
+            color={useColorModeValue('blue.50', '#0E76FD')}
+          />
+          <Box
+            position={'relative'}
+            height={{ base: '200px', sm: '260px', md: '300px' }}
+            rounded={'2xl'}
+            boxShadow={'2xl'}
+            width={'full'}
+            overflow={'hidden'}
+          >
+            <Image
+              alt={'Hero Image'}
+              fit={'cover'}
+              align={'center'}
+              w={'100%'}
+              h={'100%'}
+              src="hero.jpeg"
+            />
+          </Box>
+        </Flex>
+        <Stack flex={1} spacing={{ base: 5, md: 10 }} align="start">
           <Heading
             lineHeight={1.1}
             fontWeight={600}
@@ -56,60 +90,19 @@ export default function Home() {
             <b>PermaTok</b> lets you save the <b>TikTok</b> video to{' '}
             <b>ARweave</b> so that you can access it forever.
           </Text>
-          <Stack
-            spacing={{ base: 4, sm: 6 }}
-            direction={{ base: 'column', sm: 'row' }}
+          <Button
+            rounded={'full'}
+            size={'lg'}
+            fontWeight={'normal'}
+            px={6}
+            colorScheme={'blue'}
+            bg={'#0E76FD'}
+            _hover={{ bg: 'blue.500' }}
+            onClick={() => router.push('/save')}
           >
-            <Button
-              rounded={'full'}
-              size={'lg'}
-              fontWeight={'normal'}
-              px={6}
-              colorScheme={'blue'}
-              bg={'#0E76FD'}
-              _hover={{ bg: 'blue.500' }}
-              onClick={() => router.push('/save')}
-            >
-              Save now
-            </Button>
-          </Stack>
+            Save now
+          </Button>
         </Stack>
-        <Flex
-          flex={1}
-          justify={'center'}
-          align={'center'}
-          position={'relative'}
-          w={'full'}
-        >
-          <Blob
-            w={'150%'}
-            h={'150%'}
-            position={'absolute'}
-            top={'-20%'}
-            left={0}
-            zIndex={-1}
-            color={useColorModeValue('blue.50', '#0E76FD')}
-          />
-          <Box
-            position={'relative'}
-            height={'300px'}
-            rounded={'2xl'}
-            boxShadow={'2xl'}
-            width={'full'}
-            overflow={'hidden'}
-          >
-            <Image
-              alt={'Hero Image'}
-              fit={'cover'}
-              align={'center'}
-              w={'100%'}
-              h={'100%'}
-              src={
-                'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=800&q=80'
-              }
-            />
-          </Box>
-        </Flex>
       </Stack>
     </Container>
   )

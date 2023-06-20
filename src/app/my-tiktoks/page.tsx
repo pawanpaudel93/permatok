@@ -3,28 +3,17 @@
 import {
   Box,
   Center,
-  SimpleGrid,
   VStack,
-  Link,
   Alert,
   AlertIcon,
   Spinner,
-  Text,
-  Stack,
-  useDisclosure,
-  Button
+  Text
 } from '@chakra-ui/react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import VideoModal from '@/components/Modals/VideoModal'
 import { usePersistStore } from '@/lib/store'
 import { useEffect, useState } from 'react'
-import {
-  getTiktoks,
-  TiktokType,
-  getErrorMessage,
-  formatDuration,
-  formatDate
-} from '@/lib/utils'
+import { getTiktoks, TiktokType, getErrorMessage } from '@/lib/utils'
+import Tiktoks from '@/components/Tiktok/Tiktoks'
 
 export default function MyTiktoks() {
   const { userData } = usePersistStore()
@@ -32,8 +21,6 @@ export default function MyTiktoks() {
   const [cursor, setCursor] = useState('')
   const [tiktoks, setTiktoks] = useState<TiktokType[]>([])
   const [hasNextPage, setHasNextPage] = useState(true)
-  const { isOpen, onClose, onOpen } = useDisclosure()
-  const [videoUrl, setVideoUrl] = useState('')
 
   useEffect(() => {
     if (userData?.contract_id) {
@@ -94,81 +81,7 @@ export default function MyTiktoks() {
               </Center>
             }
           >
-            <SimpleGrid
-              columns={{
-                sm: 1
-              }}
-              spacing={4}
-            >
-              {tiktoks.map((tiktok: TiktokType) => (
-                <Box key={tiktok.id} p={4} bg="gray.100" rounded="md">
-                  <VStack align="center" spacing={2}>
-                    <Stack direction={['column', 'row']}>
-                      <Link
-                        href={tiktok.archivedUrl}
-                        color="blue"
-                        wordBreak="break-all"
-                        isExternal
-                      >
-                        Saved TikTok Link
-                      </Link>
-                      <Link
-                        href={tiktok.video?.url}
-                        color="blue"
-                        wordBreak="break-all"
-                        isExternal
-                      >
-                        Original TikTok Link
-                      </Link>
-                    </Stack>
-                    <Button
-                      onClick={() => {
-                        setVideoUrl(tiktok.archivedUrl)
-                        onOpen()
-                      }}
-                      colorScheme="blue"
-                      variant="outline"
-                      size="sm"
-                    >
-                      Watch TikTok
-                    </Button>
-                    <Text align="center">{tiktok.video?.description}</Text>
-                    <Stack direction={['column', 'row']} spacing={4}>
-                      <Stack direction={['column', 'row']} spacing={4}>
-                        <VStack spacing={1}>
-                          <Text fontWeight="bold">Username:</Text>
-                          <Link
-                            href={`https://tiktok.com/@${tiktok.video?.username}`}
-                            color="blue"
-                            isExternal
-                          >
-                            @{tiktok.video?.username}
-                          </Link>
-                        </VStack>
-                        <VStack spacing={1}>
-                          <Text fontWeight="bold">Duration:</Text>
-                          <Text>
-                            {formatDuration(tiktok.video?.duration as number)}
-                          </Text>
-                        </VStack>
-                      </Stack>
-                      <Stack direction={['column', 'row']} spacing={4}>
-                        <VStack spacing={1}>
-                          <Text fontWeight="bold">Created:</Text>
-                          <Text>
-                            {formatDate(tiktok.video?.created as number)}
-                          </Text>
-                        </VStack>
-                        <VStack spacing={1}>
-                          <Text fontWeight="bold">Saved:</Text>
-                          <Text>{formatDate(tiktok.timestamp)}</Text>
-                        </VStack>
-                      </Stack>
-                    </Stack>
-                  </VStack>
-                </Box>
-              ))}
-            </SimpleGrid>
+            <Tiktoks tiktoks={tiktoks} />
           </InfiniteScroll>
         </Box>
       )}
@@ -194,12 +107,6 @@ export default function MyTiktoks() {
           </Alert>
         </Center>
       )}
-      <VideoModal
-        videoUrl={videoUrl}
-        onClose={onClose}
-        onOpen={onOpen}
-        isOpen={isOpen}
-      />
     </Center>
   )
 }

@@ -65,7 +65,7 @@ yarn start
 - [Nextjs](https://nextjs.org/) - Reactjs Web Development Framework
 - [Chakra UI](https://chakra-ui.com/) - A simple, modular and accessible component library.
 
-## Icons
+## Images
 
 - <a href="https://www.freepik.com/free-photo/play-video-button-sign-symbol-icon-bubble-speech-chat-3d-rendering_30495100.htm#query=save%20video&position=7&from_view=search&track=ais">Image by mamewmy</a>{' '}on Freepik
 

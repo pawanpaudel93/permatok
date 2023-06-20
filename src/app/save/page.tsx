@@ -20,7 +20,8 @@ import {
   Tr,
   HStack,
   IconButton,
-  useToast
+  useToast,
+  useDisclosure
 } from '@chakra-ui/react'
 import isURL from 'validator/lib/isURL'
 import { Formik, Form, Field, FormikValues, FormikState } from 'formik'
@@ -38,6 +39,7 @@ import {
 import { usePersistStore } from '@/lib/store'
 import { CloseIcon } from '@chakra-ui/icons'
 import { Video, extractVideoId } from '@/lib/tiktok'
+import VideoModal from '@/components/Modals/VideoModal'
 
 interface MyFormValues {
   url: string
@@ -57,6 +59,8 @@ const Save = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { isAuthenticated } = usePersistStore()
   const [tiktok, setTiktok] = useState<TiktokType>(defaultTiktok)
+  const { isOpen, onClose, onOpen } = useDisclosure()
+  const [videoUrl, setVideoUrl] = useState('')
 
   function validateURL(value: string) {
     return isURL(value) && extractVideoId(value)
@@ -184,6 +188,7 @@ const Save = () => {
                       mt={4}
                       colorScheme="blue"
                       isLoading={props.isSubmitting || isLoading}
+                      loadingText="Saving..."
                       type="submit"
                       isDisabled={!isAuthenticated}
                     >
@@ -269,12 +274,34 @@ const Save = () => {
                     <Td>Saved At</Td>
                     <Td>{formatDate(tiktok.timestamp)}</Td>
                   </Tr>
+                  <Tr>
+                    <Td>Watch</Td>
+                    <Td>
+                      <Button
+                        onClick={() => {
+                          setVideoUrl(tiktok.archivedUrl)
+                          onOpen()
+                        }}
+                        colorScheme="blue"
+                        variant="outline"
+                        size="sm"
+                      >
+                        Watch TikTok
+                      </Button>
+                    </Td>
+                  </Tr>
                 </Tbody>
               </Table>
             </TableContainer>
           </VStack>
         </Container>
       )}
+      <VideoModal
+        videoUrl={videoUrl}
+        onClose={onClose}
+        onOpen={onOpen}
+        isOpen={isOpen}
+      />
     </div>
   )
 }
