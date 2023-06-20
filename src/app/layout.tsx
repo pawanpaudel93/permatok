@@ -1,7 +1,7 @@
 import { Inter } from 'next/font/google'
 import { Providers } from './providers'
-import NavBar from '@/components/NavBar'
-import { Footer } from '@/components/Footer'
+import NavBar from '@/components/Navigation/NavBar'
+import { Footer } from '@/components/Navigation/Footer'
 import NextTopLoader from 'nextjs-toploader'
 
 const inter = Inter({ subsets: ['latin'] })
