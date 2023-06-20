@@ -214,6 +214,38 @@ export const searchArchives = async (
   return { archives, hasNextPage, cursor }
 }
 
+export const getArchive = async (url: string): Promise<ArchiveType> => {
+  let archive: ArchiveType = {
+    id: '',
+    url: '',
+    archivedUrl: '',
+    timestamp: 0
+  }
+  try {
+    const result = await query({ first: 1, url })
+    if (result.archivedTransactions.length > 0) {
+      const transaction = result.archivedTransactions[0] as {
+        node: { tags: Tag[]; id: string }
+      }
+      const { id, tags } = transaction.node
+      archive = {
+        id,
+        url: tags[6]?.value ?? '',
+        archivedUrl: `https://arweave.net/${id}`,
+        timestamp: parseInt(tags[4]?.value ?? '0'),
+        video: {
+          url: tags[6]?.value ?? '',
+          username: tags[7]?.value ?? '',
+          description: tags[8]?.value ?? '',
+          duration: parseInt(tags[9]?.value ?? '0'),
+          created: parseInt(tags[10]?.value ?? '0')
+        }
+      }
+    }
+  } catch (error) {}
+  return archive
+}
+
 export const getAllArchives = async (
   walletAddress: string
 ): Promise<ArchiveType[]> => {

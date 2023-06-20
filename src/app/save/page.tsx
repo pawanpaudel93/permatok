@@ -32,6 +32,7 @@ import {
   formatDate,
   formatDuration,
   getAccessToken,
+  getArchive,
   getErrorMessage
 } from '@/lib/utils'
 import { usePersistStore } from '@/lib/store'
@@ -66,40 +67,45 @@ const Save = () => {
   async function archiveUrl(url: string) {
     try {
       setArchive(defaultArchive)
-      const accessToken = await getAccessToken()
-      const address = userData?.contract_id as string
-      const archiveUrl = process.env.NEXT_PUBLIC_API_URL ?? '/api/video-info'
-      const response = await fetch(archiveUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ url })
-      })
-      const responseJSON = await response.json()
-      const videoData = responseJSON.data as Video
+      const savedTiktok = await getArchive(url)
+      if (savedTiktok.archivedUrl) {
+        setArchive(savedTiktok)
+      } else {
+        const accessToken = await getAccessToken()
+        const address = userData?.contract_id as string
+        const archiveUrl = process.env.NEXT_PUBLIC_API_URL ?? '/api/video-info'
+        const response = await fetch(archiveUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ url })
+        })
+        const responseJSON = await response.json()
+        const videoData = responseJSON.data as Video
 
-      const timestamp = Math.floor(Date.now() / 1000)
+        const timestamp = Math.floor(Date.now() / 1000)
 
-      const { data, tags } = await prepareFile(
-        videoData,
-        url,
-        timestamp,
-        address
-      )
-      const transactionId = await uploadToBundlr(
-        data,
-        tags,
-        accessToken.id_token
-      )
+        const { data, tags } = await prepareFile(
+          videoData,
+          url,
+          timestamp,
+          address
+        )
+        const transactionId = await uploadToBundlr(
+          data,
+          tags,
+          accessToken.id_token
+        )
 
-      setArchive({
-        id: transactionId,
-        timestamp,
-        video: videoData,
-        url,
-        archivedUrl: `https://arweave.net/${transactionId}`
-      })
+        setArchive({
+          id: transactionId,
+          timestamp,
+          video: videoData,
+          url,
+          archivedUrl: `https://arweave.net/${transactionId}`
+        })
+      }
     } catch (error) {
       console.trace(error)
       toast({
