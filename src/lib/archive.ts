@@ -1,32 +1,7 @@
-import {
-  SendTransactionBundlrProps,
-  SendTransactionBundlrReturnProps
-} from 'othent'
 import { APP_NAME, APP_VERSION } from './constants'
-import { createHash } from 'crypto'
 import { Video } from './tiktok'
 import { sha256 } from 'crypto-hash'
-
-export async function sendTransactionBundlr(
-  params: SendTransactionBundlrProps
-): Promise<SendTransactionBundlrReturnProps> {
-  const data = params.data
-
-  const blob = new Blob([data])
-
-  const formData = new FormData()
-
-  formData.append('file', blob)
-  formData.append('dataHashJWT', params.JWT)
-  formData.append('API_ID', process.env.NEXT_PUBLIC_OTHENT_API_ID as string)
-  formData.append('tags', JSON.stringify(params.tags))
-
-  const response = await fetch('https://server.othent.io/upload-data-bundlr', {
-    method: 'POST',
-    body: formData
-  })
-  return response.json()
-}
+import { getOthent } from './utils'
 
 export async function prepareFile(
   data: Video,
@@ -55,12 +30,13 @@ export async function prepareFile(
 }
 
 export async function uploadToBundlr(
-  data: Buffer | string,
+  data: Buffer,
   tags: any,
   idToken: string
 ): Promise<string> {
-  const response = await sendTransactionBundlr({
-    data: data as unknown as Buffer,
+  const othent = await getOthent()
+  const response = await othent.sendTransactionBundlr({
+    data,
     JWT: idToken,
     tags
   })

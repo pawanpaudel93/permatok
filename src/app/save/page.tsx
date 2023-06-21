@@ -110,7 +110,6 @@ const Save = () => {
         })
       }
     } catch (error) {
-      console.trace(error)
       toast({
         title: getErrorMessage(error),
         status: 'error',

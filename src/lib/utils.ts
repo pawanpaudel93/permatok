@@ -1,6 +1,6 @@
-import { Othent, useOthentReturnProps } from 'othent'
+import { DecodedJWT, Othent, useOthentReturnProps } from 'othent'
 import { createAuth0Client } from '@auth0/auth0-spa-js'
-import { sha256 } from 'crypto-hash'
+import jwt_decode from 'jwt-decode'
 import { APP_NAME, APP_VERSION } from './constants'
 import axios from 'axios'
 import { Video } from './tiktok'
@@ -68,6 +68,13 @@ export async function getAccessToken(file_hash: string) {
     detailedResponse: true,
     authorizationParams: authParams
   })
+  const JWT = accessToken.id_token
+  const decoded_JWT: DecodedJWT = jwt_decode(JWT)
+  if (!decoded_JWT.contract_id) {
+    throw new Error(
+      `{ success: false, message: "Please create a Othent account" }`
+    )
+  }
   return accessToken
 }
 
