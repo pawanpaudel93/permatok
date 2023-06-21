@@ -108,7 +108,6 @@ export default function Search() {
             boxShadow="lg"
             rounded="md"
             p={4}
-            bg="white"
           >
             <InfiniteScroll
               dataLength={tiktoks.length}

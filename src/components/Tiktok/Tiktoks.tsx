@@ -7,7 +7,8 @@ import {
   Box,
   Link,
   Text,
-  useDisclosure
+  useDisclosure,
+  useColorModeValue
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import VideoModal from '../Modals/VideoModal'
@@ -19,6 +20,7 @@ interface TiktoksProps {
 const Tiktoks = ({ tiktoks }: TiktoksProps) => {
   const { isOpen, onClose, onOpen } = useDisclosure()
   const [videoUrl, setVideoUrl] = useState('')
+  const bg = useColorModeValue('gray.100', 'gray.700')
 
   return (
     <>
@@ -29,12 +31,12 @@ const Tiktoks = ({ tiktoks }: TiktoksProps) => {
         spacing={4}
       >
         {tiktoks.map((tiktok: TiktokType) => (
-          <Box key={tiktok.id} p={4} bg="gray.100" rounded="md">
+          <Box key={tiktok.id} p={4} bg={bg} rounded="md">
             <VStack align="center" spacing={2}>
               <Stack direction={['column', 'row']}>
                 <Link
                   href={tiktok.archivedUrl}
-                  color="blue"
+                  color="blue.500"
                   wordBreak="break-all"
                   isExternal
                 >
@@ -42,7 +44,7 @@ const Tiktoks = ({ tiktoks }: TiktoksProps) => {
                 </Link>
                 <Link
                   href={tiktok.video?.url}
-                  color="blue"
+                  color="blue.500"
                   wordBreak="break-all"
                   isExternal
                 >
@@ -67,7 +69,7 @@ const Tiktoks = ({ tiktoks }: TiktoksProps) => {
                     <Text fontWeight="bold">Username:</Text>
                     <Link
                       href={`https://tiktok.com/@${tiktok.video?.username}`}
-                      color="blue"
+                      color="blue.500"
                       isExternal
                     >
                       @{tiktok.video?.username}
