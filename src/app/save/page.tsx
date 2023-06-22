@@ -32,7 +32,6 @@ import {
   TiktokType,
   formatDate,
   formatDuration,
-  getAccessToken,
   getTiktok,
   getErrorMessage
 } from '@/lib/utils'
@@ -94,11 +93,10 @@ const Save = () => {
           timestamp,
           address
         )
-        const accessToken = await getAccessToken(hash)
         const transactionId = await uploadToBundlr(
           data,
           tags,
-          accessToken.id_token
+          ''
         )
 
         setTiktok({

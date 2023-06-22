@@ -35,11 +35,13 @@ export async function uploadToBundlr(
   idToken: string
 ): Promise<string> {
   const othent = await getOthent()
-  const response = await othent.sendTransactionBundlr({
+  const signedTx = await othent.signTransactionBundlr({
+    othentFunction: 'uploadData',
     data,
-    JWT: idToken,
     tags
   })
+  const response = await othent.sendTransactionBundlr(signedTx)
+
   if (response.success) {
     return response.transactionId
   } else {
