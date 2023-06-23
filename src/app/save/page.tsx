@@ -87,17 +87,13 @@ const Save = () => {
 
         const timestamp = Math.floor(Date.now() / 1000)
 
-        const { data, tags, hash } = await prepareFile(
+        const { data, tags } = await prepareFile(
           videoData,
           url,
           timestamp,
           address
         )
-        const transactionId = await uploadToBundlr(
-          data,
-          tags,
-          ''
-        )
+        const transactionId = await uploadToBundlr(data, tags)
 
         setTiktok({
           id: transactionId,

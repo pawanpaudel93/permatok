@@ -26,25 +26,33 @@ export async function prepareFile(
     { name: 'tiktok:duration', value: String(duration) },
     { name: 'tiktok:created', value: String(created) }
   ]
-  return { data: bufferData, tags, hash }
+  return { data: bufferData, tags }
 }
 
-export async function uploadToBundlr(
-  data: Buffer,
-  tags: any,
-  idToken: string
-): Promise<string> {
+function delay(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+export async function uploadToBundlr(data: Buffer, tags: any): Promise<string> {
   const othent = await getOthent()
   const signedTx = await othent.signTransactionBundlr({
     othentFunction: 'uploadData',
     data,
     tags
   })
-  const response = await othent.sendTransactionBundlr(signedTx)
 
-  if (response.success) {
-    return response.transactionId
-  } else {
-    return await uploadToBundlr(data, tags, idToken)
+  const maxRetries = 3
+  let retries = 0
+
+  while (retries < maxRetries) {
+    const response = await othent.sendTransactionBundlr(signedTx)
+    if (response.success) {
+      return response.transactionId
+    } else {
+      retries++
+      await delay(1000) // Add a delay of 1 second before retrying
+    }
   }
+
+  throw new Error('Failed to upload TikTok to Arweave after multiple retries.')
 }
