@@ -1,6 +1,4 @@
-import { DecodedJWT, Othent, useOthentReturnProps } from 'othent'
-import { createAuth0Client } from '@auth0/auth0-spa-js'
-import jwt_decode from 'jwt-decode'
+import { Othent, useOthentReturnProps } from 'othent'
 import { APP_NAME, APP_VERSION } from './constants'
 import axios from 'axios'
 import { Video } from './tiktok'
@@ -44,38 +42,6 @@ export async function getOthent(apiid?: string) {
     callbackURLs: [window.location.origin]
   })
   return othent
-}
-
-const getAuth0Client = () =>
-  createAuth0Client({
-    domain: 'othent.us.auth0.com',
-    clientId: 'dyegx4dZj5yOv0v0RkoUsc48CIqaNS6C',
-    authorizationParams: {
-      redirect_uri: window.location.origin
-    }
-  })
-
-export async function getAccessToken(file_hash: string) {
-  const auth0 = await getAuth0Client()
-
-  const authParams = {
-    transaction_input: JSON.stringify({
-      othentFunction: 'uploadData',
-      file_hash
-    })
-  }
-  const accessToken = await auth0.getTokenSilently({
-    detailedResponse: true,
-    authorizationParams: authParams
-  })
-  const JWT = accessToken.id_token
-  const decoded_JWT: DecodedJWT = jwt_decode(JWT)
-  if (!decoded_JWT.contract_id) {
-    throw new Error(
-      `{ success: false, message: "Please create a Othent account" }`
-    )
-  }
-  return accessToken
 }
 
 const query = async ({
